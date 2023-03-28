@@ -2,6 +2,7 @@ import { ConfigService } from '@nestjs/config';
 import configuration from './configuration';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
+import EntityList from '@/resource/entity';
 const databaseConnection = (): PostgresConnectionOptions => {
   const config = configuration();
   const configService: ConfigService = new ConfigService<
