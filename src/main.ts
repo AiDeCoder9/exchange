@@ -3,6 +3,8 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import swaggerConfig from '@/config/swagger.config';
 import { SwaggerModule } from '@nestjs/swagger';
+import { CustomValidationPipe } from './pipe/validation-pipe';
+import { ExceptionFilter } from './exceptions/exception-filter';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   SwaggerModule.setup(
@@ -10,6 +12,9 @@ async function bootstrap() {
     app,
     SwaggerModule.createDocument(app, swaggerConfig),
   );
+
+  app.useGlobalPipes(new CustomValidationPipe());
+  app.useGlobalFilters(new ExceptionFilter());
   await app.listen(process.env.PORT || 3400);
 }
 bootstrap()

@@ -1,8 +1,8 @@
 import { ConfigService } from '@nestjs/config';
 import configuration from './configuration';
-import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
-
-const databaseConnection = (): PostgresConnectionOptions => {
+import { DataSource, DataSourceOptions } from 'typeorm';
+import EntityList from '@/resource/entity';
+const databaseConnection = (): DataSourceOptions => {
   const config = configuration();
   const configService: ConfigService = new ConfigService<
     Record<string, unknown>,
@@ -18,7 +18,11 @@ const databaseConnection = (): PostgresConnectionOptions => {
     username: dbConfig?.user,
     password: dbConfig?.password,
     database: dbConfig?.database,
+    entities: EntityList,
+    synchronize: true,
   };
 };
 
-export { databaseConnection };
+const connection = new DataSource(databaseConnection()).createQueryRunner();
+
+export { databaseConnection, connection };

@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { Transform } from 'class-transformer';
-import { EntityManager, getManager, Not, Repository } from 'typeorm';
+import { DataSource, Not, Repository } from 'typeorm';
 import {
   registerDecorator,
   ValidationOptions,
@@ -10,9 +10,9 @@ import {
 } from 'class-validator';
 import { ClassConstructor } from 'class-transformer';
 import { stringToBase64 } from '@/utils/string-convertor';
-import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
-import { Injectable } from '@nestjs/common';
-
+import { Inject, Injectable } from '@nestjs/common';
+import { connection } from '@/config/database.config';
+import { InjectConnection, InjectDataSource } from '@nestjs/typeorm';
 interface OptionInterface {
   column: string;
   value?: string | number;
@@ -126,11 +126,41 @@ export class IsExistConstraint implements ValidatorConstraintInterface {
     return `${entityPropertyName} already exists`;
   }
 }
+@Injectable()
+@ValidatorConstraint({ name: 'isDuplicate', async: true })
+class IsDuplicateConstraint implements ValidatorConstraintInterface {
+  private conn;
+  constructor() {
+    this.conn = connection;
+  }
+
+  async validate(value: any, args: any): Promise<boolean> {
+    const [entityClass, property] = args.constraints;
+    //console.log(await this.repository.q, '>>>>>>');
+    // const entityManager = await this.dataSource.query(`select * from category`);
+    // console.log(entityManager, 'kkkk');
+    console.log('connection', this.conn);
+    const response = await this.conn.query('select * from category');
+    console.log(response, '>>>');
+    return false;
+    // console.log(entityManager, entityClass, 'check');
+    // const result = entityManager.findOne(entityClass, {
+    //   where: { [property]: value },
+    // });
+    // return !result;
+  }
+
+  defaultMessage(args: ValidationArguments): string {
+    const [property] = args.constraints;
+    return `${property} must be unique`;
+  }
+}
 
 export function IsDuplicate<T>(
   entityClass: new () => T,
   entityPropertyName: string,
 ) {
+  console.log(entityClass);
   return function (object: Record<string, any>, propertyName: string) {
     registerDecorator({
       name: 'isDuplicate',
@@ -140,36 +170,6 @@ export function IsDuplicate<T>(
       validator: IsDuplicateConstraint,
     });
   };
-}
-
-@Injectable()
-@ValidatorConstraint({ name: 'isDuplicate', async: true })
-export class IsDuplicateConstraint implements ValidatorConstraintInterface {
-  constructor(
-    @InjectEntityManager()
-    private readonly entityManager: EntityManager,
-  ) {}
-
-  async validate(value: any, args: ValidationArguments) {
-    const [entityClass, propertyName] = args.constraints;
-    const where = { [propertyName as string]: value };
-    const id = (args.object as any).id;
-
-    if (id) {
-      where['id'] = { $ne: id };
-    }
-
-    const duplicate = await this.entityManager.findOne(entityClass, {
-      where: where,
-      select: ['id'],
-    });
-
-    return !!duplicate;
-  }
-
-  defaultMessage(args: ValidationArguments) {
-    return `${args.property} already exists`;
-  }
 }
 
 export const NotMatches = (

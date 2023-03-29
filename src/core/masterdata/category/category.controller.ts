@@ -1,3 +1,4 @@
+import { RequestSchema } from '@/decorator/request.decorator';
 import {
   Body,
   Controller,
@@ -8,10 +9,12 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { CategoryEntity } from './category.entity';
 import { CategoryService } from './category.service';
 import { Category } from './dto/category.dto';
 
+@ApiTags('Category API')
 @Controller('category')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
@@ -30,10 +33,12 @@ export class CategoryController {
   }
 
   @Post()
+  @RequestSchema(Category)
   async create(@Body() createCategory: Category) {
     return this.categoryService.create(createCategory);
   }
   @Put(':id')
+  @RequestSchema(Category)
   async update(@Param('id') id: number, @Body() updateCategoryDto: Category) {
     return this.categoryService.update(id, updateCategoryDto);
   }
