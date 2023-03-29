@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CategoryEntity } from './category.entity';
 import { Category } from './dto/category.dto';
 
@@ -9,11 +9,9 @@ export class CategoryService {
   constructor(
     @InjectRepository(CategoryEntity)
     private categoryRepository: Repository<CategoryEntity>,
-    private connnection: DataSource,
   ) {}
 
   findAll(): Promise<CategoryEntity[]> {
-    console.log('connenction', this.connnection);
     return this.categoryRepository.find();
   }
 

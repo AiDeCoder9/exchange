@@ -1,10 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import ModuleList from '@/resource/module';
-import { DataSource } from 'typeorm';
 
-import { connection, databaseConnection } from './database.config';
-import DatabaseProvider from '@/providers/database-provider';
+import { databaseConnection } from './database.config';
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
@@ -16,6 +14,4 @@ import DatabaseProvider from '@/providers/database-provider';
   ],
   providers: [],
 })
-export class TypeORMConfigModule {
-  constructor(public connection: DataSource) {}
-}
+export class TypeORMConfigModule {}

@@ -4,4 +4,5 @@ interface DatabaseConfig {
   user: string;
   password: string;
   database: string;
+  autoLoadEntities: boolean;
 }

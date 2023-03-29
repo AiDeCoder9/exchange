@@ -12,7 +12,8 @@ import { ClassConstructor } from 'class-transformer';
 import { stringToBase64 } from '@/utils/string-convertor';
 import { Inject, Injectable } from '@nestjs/common';
 import { connection } from '@/config/database.config';
-import { InjectConnection, InjectDataSource } from '@nestjs/typeorm';
+
+import { CategoryEntity } from '@/core/masterdata/category/category.entity';
 interface OptionInterface {
   column: string;
   value?: string | number;
@@ -129,29 +130,17 @@ export class IsExistConstraint implements ValidatorConstraintInterface {
 @Injectable()
 @ValidatorConstraint({ name: 'isDuplicate', async: true })
 class IsDuplicateConstraint implements ValidatorConstraintInterface {
-  private conn;
-  constructor() {
-    this.conn = connection;
-  }
-
   async validate(value: any, args: any): Promise<boolean> {
     const [entityClass, property] = args.constraints;
-    //console.log(await this.repository.q, '>>>>>>');
-    // const entityManager = await this.dataSource.query(`select * from category`);
-    // console.log(entityManager, 'kkkk');
-    console.log('connection', this.conn);
-    const response = await this.conn.query('select * from category');
-    console.log(response, '>>>');
-    return false;
-    // console.log(entityManager, entityClass, 'check');
-    // const result = entityManager.findOne(entityClass, {
-    //   where: { [property]: value },
-    // });
-    // return !result;
+    console.log(value, 'value', args);
+    const response = await connection.manager.findOne(entityClass, {
+      where: { [property]: value },
+    });
+    return !response ? true : false;
   }
 
   defaultMessage(args: ValidationArguments): string {
-    const [property] = args.constraints;
+    const [entityClass, property] = args.constraints;
     return `${property} must be unique`;
   }
 }

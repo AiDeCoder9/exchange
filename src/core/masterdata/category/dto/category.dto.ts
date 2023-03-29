@@ -17,7 +17,6 @@ export class Category {
 
   @IsNotEmpty()
   @IsString()
-  @ToUpperCase()
   @IsDuplicate(CategoryEntity, 'name')
   name: string;
 

@@ -19,10 +19,18 @@ const databaseConnection = (): DataSourceOptions => {
     password: dbConfig?.password,
     database: dbConfig?.database,
     entities: EntityList,
+    //autoLoadEntities: true,
     synchronize: true,
-  };
+  } as DataSourceOptions;
 };
 
-const connection = new DataSource(databaseConnection()).createQueryRunner();
-
+const connection = new DataSource(databaseConnection());
+connection
+  .initialize()
+  .then(() => {
+    console.log(`Data Source has been initialized`);
+  })
+  .catch((err) => {
+    console.error(`Data Source initialization error`, err);
+  });
 export { databaseConnection, connection };
