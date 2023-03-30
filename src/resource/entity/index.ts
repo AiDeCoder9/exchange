@@ -1,2 +1,3 @@
 import { CategoryEntity } from '@/core/masterdata/category/category.entity';
-export default [CategoryEntity];
+import { UserEntity } from '@/core/user-management/user/user.entity';
+export default [CategoryEntity, UserEntity];
