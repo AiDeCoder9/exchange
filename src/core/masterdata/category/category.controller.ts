@@ -1,4 +1,7 @@
 import { RequestSchema } from '@/decorator/request.decorator';
+import { Roles } from '@/decorator/role.decorator';
+
+import { USER_ROLE } from '@/utils/constant';
 import {
   Body,
   Controller,
@@ -8,6 +11,7 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { CategoryEntity } from './category.entity';
@@ -16,6 +20,7 @@ import { Category } from './dto/category.dto';
 
 @ApiTags('Category API')
 @Controller('category')
+@Roles(USER_ROLE.ADMIN)
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
   @Get()

@@ -1,4 +1,5 @@
-import { AuthGuard } from '@/guard/auth.guard';
+import { Public } from '@/decorator/public.decorator';
+
 import { JwtAuthGuard } from '@/guard/jwt-auth.guard';
 import { LocalAuthGuard } from '@/guard/local.guard';
 import {
@@ -19,6 +20,7 @@ export class AuthenticationController {
   constructor(private authService: AuthenticationService) {}
 
   @HttpCode(HttpStatus.OK)
+  @Public()
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async signIn(@Body() loginRequest: LoginRequest) {

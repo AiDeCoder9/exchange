@@ -10,5 +10,7 @@ services:
       POSTGRES_PASSWORD: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    expose:
+      - "9999"
 volumes:
  postgres_data:

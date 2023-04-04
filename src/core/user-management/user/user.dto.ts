@@ -11,7 +11,7 @@ import {
 import { IsDuplicate, Trim } from '@/decorator/transform.decorator';
 
 import { ApiProperty } from '@nestjs/swagger';
-import { GENDER_TYPE, USER_ROLE } from '@/utils/constant';
+import { GENDER_TYPE } from '@/utils/constant';
 import { UserEntity } from './user.entity';
 
 export class User {
@@ -61,11 +61,4 @@ export class User {
   @Trim()
   @ApiProperty()
   password: string;
-
-  @IsNotEmpty({ message: 'Role is Required' })
-  @IsString()
-  @Trim()
-  @ApiProperty()
-  @IsEnum(USER_ROLE)
-  role: USER_ROLE;
 }
