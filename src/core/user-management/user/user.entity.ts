@@ -18,4 +18,6 @@ export class UserEntity extends CommonEntityPrimary {
   password: string;
   @Column({ name: 'role', nullable: false })
   role: USER_ROLE;
+  @Column({ default: false })
+  isEmailVerified: boolean;
 }

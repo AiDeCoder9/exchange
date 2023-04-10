@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { Transform } from 'class-transformer';
-import { DataSource, Not, Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import {
   registerDecorator,
   ValidationOptions,
@@ -10,10 +10,9 @@ import {
 } from 'class-validator';
 import { ClassConstructor } from 'class-transformer';
 import { stringToBase64 } from '@/utils/string-convertor';
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { connection } from '@/config/database.config';
 
-import { CategoryEntity } from '@/core/masterdata/category/category.entity';
 interface OptionInterface {
   column: string;
   value?: string | number;

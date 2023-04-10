@@ -28,8 +28,7 @@ export class AuthenticationService {
         access_token: await this.jwtService.signAsync(payload),
       };
     } else {
-      console.log('check');
-      // throw new UnauthorizedException();
+      throw new UnauthorizedException();
     }
   }
   async validateUser(email: string, pass: string): Promise<any> {

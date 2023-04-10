@@ -6,3 +6,12 @@ interface DatabaseConfig {
   database: string;
   autoLoadEntities: boolean;
 }
+
+interface MailConfig {
+  key: string;
+  sender: string;
+}
+interface TokenConfig {
+  expiry: string;
+  secret: string;
+}
