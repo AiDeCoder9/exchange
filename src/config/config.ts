@@ -10,6 +10,6 @@ import configuration from './configuration';
     }),
   ],
   providers: [],
-  exports: [ConfigModule],
+  exports: [],
 })
 export class ConfigurationModule {}

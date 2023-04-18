@@ -18,3 +18,23 @@ export class LoginRequest {
   @ApiProperty()
   password: string;
 }
+
+export class SetPasswordRequest {
+  @IsNotEmpty({ message: 'Password is Required' })
+  @IsString()
+  @Trim()
+  @ApiProperty()
+  oldPassword: string;
+
+  @IsNotEmpty({ message: 'Password is Required' })
+  @IsString()
+  @Trim()
+  @ApiProperty()
+  newPassword: string;
+
+  @IsNotEmpty({ message: 'Password is Required' })
+  @IsString()
+  @Trim()
+  @ApiProperty()
+  confirmPassword: string;
+}

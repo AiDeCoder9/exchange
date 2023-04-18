@@ -55,10 +55,4 @@ export class User {
   @ApiProperty()
   @IsEnum(GENDER_TYPE)
   gender: GENDER_TYPE;
-
-  @IsNotEmpty({ message: 'Password is Required' })
-  @IsString()
-  @Trim()
-  @ApiProperty()
-  password: string;
 }

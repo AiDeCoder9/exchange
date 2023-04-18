@@ -11,8 +11,10 @@ import {
   UseGuards,
   Get,
   Request,
+  Headers,
 } from '@nestjs/common';
-import { LoginRequest } from './authentication.dto';
+
+import { LoginRequest, SetPasswordRequest } from './authentication.dto';
 import { AuthenticationService } from './authentication.service';
 
 @Controller()
@@ -31,5 +33,10 @@ export class AuthenticationController {
   @Get('profile')
   getProfile(@Request() req: any) {
     return req.user;
+  }
+  @Public()
+  @Post('set-password')
+  async setPassword(@Body() setPasswordRequest: SetPasswordRequest) {
+    return this.authService.setPassword(setPasswordRequest);
   }
 }

@@ -8,10 +8,12 @@ import { jwtConstants } from '@/utils/constant';
 import { LocalStrategy } from '@/strategies/local.strategy';
 import { JwtStrategy } from '@/strategies/jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
+import { AsyncStorageModule } from '@/resource/module/async-storage.module';
 
 @Module({
   imports: [
     UserModule,
+    AsyncStorageModule,
     PassportModule.register({ defaultStrategy: 'local' }),
     JwtModule.register({
       global: true,

@@ -15,7 +15,7 @@ export class EmailVerificationService {
     private readonly configService: ConfigService,
   ) {}
 
-  async sendVerificationEmail(email: string) {
+  async sendVerificationEmail(email: string, password: string) {
     const payload = { email };
     console.log(payload);
     const tokenConfig = this.configService.get<TokenConfig>('token');
@@ -33,7 +33,13 @@ export class EmailVerificationService {
       from: process.env.MAIL_SENDER as string,
       subject: 'Verify your Email',
       text: 'Welcome to Exchange Platform. Exchange everything and anything',
-      html: `Please click on the given link to confirm you email <a href=${confirmationUrl} target='_blank'>Link</a>`,
+      html: `
+      <div>
+        <p>Login using your temporary password and email</p>
+        <h6>Temporary Password</h6>
+        <p>${password}</p>
+      </div>
+      `,
     };
     sendGrid
       .send(msg)
@@ -44,12 +50,12 @@ export class EmailVerificationService {
         console.error(error);
       });
   }
-  async resendVerificationLink(email: string) {
+  async resendVerificationLink(email: string, password: string) {
     const user = await this.userRepository.findOneBy({ email });
     if (user?.isEmailVerified) {
       throw new BadRequestException('Email is already verified');
     }
-    await this.sendVerificationEmail(email);
+    await this.sendVerificationEmail(email, password);
   }
   async markEmailAsVerified(token: string) {
     const email = await this.decodeVerificationToken(token);
@@ -66,7 +72,6 @@ export class EmailVerificationService {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: tokenConfig?.secret,
       });
-      console.log(payload, 'payload');
       if ('email' in payload) {
         return payload.email;
       }

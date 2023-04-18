@@ -15,3 +15,8 @@ interface TokenConfig {
   expiry: string;
   secret: string;
 }
+
+interface RequestInfoData {
+  ip: string;
+  useragent: string;
+}

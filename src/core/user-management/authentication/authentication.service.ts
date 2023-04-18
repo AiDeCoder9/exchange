@@ -2,31 +2,48 @@ import {
   Injectable,
   Dependencies,
   UnauthorizedException,
+  BadRequestException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
+
+import { SetPasswordRequest } from './authentication.dto';
+
+import { ConfigService } from '@nestjs/config';
+
 @Injectable()
-@Dependencies(UserService, JwtService)
 export class AuthenticationService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
+
+    private configService: ConfigService,
   ) {}
 
   async login(email: string, pass: string) {
     const user = await this.userService.findOne(email);
 
     if (user) {
+      const payload = { username: user.email, sub: user.id, role: user.role };
       const match = await bcrypt.compare(pass, user?.password);
       if (!match) {
         throw new UnauthorizedException();
       }
-
-      const payload = { username: user.email, sub: user.id, role: user.role };
-      return {
-        access_token: await this.jwtService.signAsync(payload),
-      };
+      if (user.isEmailVerified) {
+        return {
+          access_token: await this.jwtService.signAsync(payload),
+        };
+      } else {
+        const tokenConfig = this.configService.get<TokenConfig>('token');
+        const token = await this.jwtService.signAsync(payload, {
+          secret: tokenConfig?.secret,
+          expiresIn: tokenConfig?.expiry,
+        });
+        return {
+          access_token: token,
+        };
+      }
     } else {
       throw new UnauthorizedException();
     }
@@ -43,5 +60,13 @@ export class AuthenticationService {
     }
 
     return null;
+  }
+  async setPassword(requestData: SetPasswordRequest) {
+    //console.log(this.request.headers['authorization']);
+    if (requestData.newPassword !== requestData.confirmPassword) {
+      throw new BadRequestException('New and Confirm Password is not equal');
+    }
+    console.log(this.userService.getUserId());
+    console.log(requestData);
   }
 }
