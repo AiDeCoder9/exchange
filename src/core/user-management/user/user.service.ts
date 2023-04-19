@@ -1,5 +1,9 @@
 import { USER_ROLE } from '@/utils/constant';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.dto';
@@ -18,6 +22,12 @@ export class UserService {
 
   findOne(email: string): Promise<UserEntity | null> {
     return this.userRepository.findOneBy({ email });
+  }
+  async findActiveUser(): Promise<UserEntity> {
+    const { id } = this.asyncLocalStorage.getStore();
+    const user = await this.userRepository.findOneBy({ id });
+    if (user) return user;
+    throw new UnauthorizedException('Active Session not found');
   }
   async create(user: User) {
     const request = { ...user, role: USER_ROLE.GENERAL };
@@ -48,9 +58,12 @@ export class UserService {
       },
     );
   }
-  getUserId(): string {
-    const test = this.asyncLocalStorage.getStore();
-    console.log(test, 'test');
-    return JSON.stringify(test);
+
+  async updateUserPassword(password: string) {
+    const { id } = this.asyncLocalStorage.getStore();
+    await this.userRepository.update(
+      { id },
+      { password, isEmailVerified: true },
+    );
   }
 }

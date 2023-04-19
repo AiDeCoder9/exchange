@@ -1,3 +1,4 @@
+import { UserService } from '@/core/user-management/user/user.service';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -9,6 +10,7 @@ export class CategoryService {
   constructor(
     @InjectRepository(CategoryEntity)
     private categoryRepository: Repository<CategoryEntity>,
+    private userService: UserService,
   ) {}
 
   findAll(): Promise<CategoryEntity[]> {
@@ -23,15 +25,19 @@ export class CategoryService {
     await this.categoryRepository.delete(id);
   }
   async create(createCategory: Category) {
-    await this.categoryRepository.save(createCategory);
+    const user = await this.userService.findActiveUser();
+    const requestData = { ...createCategory, user };
+    await this.categoryRepository.save(requestData);
   }
 
   async update(id: number, updateCategoryDto: Category) {
     const category = await this.categoryRepository.findOneBy({ id });
+    const user = await this.userService.findActiveUser();
     if (category) {
       category.name = updateCategoryDto.name ?? category.name;
       category.description =
         updateCategoryDto.description ?? category.description;
+      category.user = user;
       this.categoryRepository.update(id, category);
     }
   }

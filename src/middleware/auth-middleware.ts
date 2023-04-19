@@ -18,9 +18,8 @@ export class AuthMiddleware implements NestMiddleware {
       try {
         const tokenConfig = this.configService.get<TokenConfig>('token');
         const decoded = this.jwtService.verify(token, {
-          secret: tokenConfig?.secret,
+          //secret: tokenConfig?.secret,
         });
-        console.log(decoded, 'decoded');
         this.asyncLocalStorage.run({ token, id: decoded.sub }, () => next());
       } catch (err) {
         console.error(err);

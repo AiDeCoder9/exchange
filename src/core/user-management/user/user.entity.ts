@@ -1,6 +1,7 @@
+import { CategoryEntity } from '@/core/masterdata/category/category.entity';
 import { CommonEntityPrimary } from '@/resource/entity/primary.entity';
 import { GENDER_TYPE, USER_ROLE } from '@/utils/constant';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 
 @Entity({ name: 'user' })
 export class UserEntity extends CommonEntityPrimary {
@@ -20,4 +21,7 @@ export class UserEntity extends CommonEntityPrimary {
   role: USER_ROLE;
   @Column({ default: false })
   isEmailVerified: boolean;
+
+  @OneToMany(() => CategoryEntity, (category) => category.user)
+  categories: CategoryEntity[];
 }

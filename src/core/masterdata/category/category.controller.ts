@@ -11,9 +11,8 @@ import {
   Param,
   Post,
   Put,
-  UseGuards,
 } from '@nestjs/common';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { CategoryEntity } from './category.entity';
 import { CategoryService } from './category.service';
 import { Category } from './dto/category.dto';

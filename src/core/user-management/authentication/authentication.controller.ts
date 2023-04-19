@@ -28,6 +28,13 @@ export class AuthenticationController {
   async signIn(@Body() loginRequest: LoginRequest) {
     return this.authService.login(loginRequest.email, loginRequest.password);
   }
+  @HttpCode(HttpStatus.OK)
+  @Public()
+  @UseGuards(LocalAuthGuard)
+  @Post('logout')
+  async logout() {
+    return this.authService.logout();
+  }
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
