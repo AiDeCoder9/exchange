@@ -20,4 +20,7 @@ export default () => ({
     secret: process.env.REFRESH_TOKEN_SECRET,
     expiry: process.env.REFRESH_TOKEN_EXPIRY,
   },
+  multer: {
+    destination: './uploads',
+  },
 });

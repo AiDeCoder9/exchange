@@ -15,6 +15,9 @@ interface TokenConfig {
   expiry: string;
   secret: string;
 }
+interface MulterConfig {
+  destination: string;
+}
 
 interface RequestInfoData {
   ip: string;

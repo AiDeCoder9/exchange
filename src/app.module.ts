@@ -12,6 +12,7 @@ import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { RolesGuard } from './guard/role.guard';
 import { AuthMiddleware } from './middleware/auth-middleware';
 import { AsyncStorageModule } from './resource/module/async-storage.module';
+import { CreateUpdateSubscriber } from './subscriber/create-update-subscriber';
 
 @Module({
   imports: [ConfigurationModule, TypeORMConfigModule, AsyncStorageModule],
@@ -24,6 +25,10 @@ import { AsyncStorageModule } from './resource/module/async-storage.module';
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: CreateUpdateSubscriber,
     },
   ],
 })

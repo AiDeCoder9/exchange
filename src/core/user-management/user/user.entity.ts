@@ -1,4 +1,5 @@
 import { CategoryEntity } from '@/core/masterdata/category/category.entity';
+import { ProductEntity } from '@/core/product/product.entity';
 import { CommonEntityPrimary } from '@/resource/entity/primary.entity';
 import { GENDER_TYPE, USER_ROLE } from '@/utils/constant';
 import { Column, Entity, OneToMany } from 'typeorm';
@@ -24,4 +25,7 @@ export class UserEntity extends CommonEntityPrimary {
 
   @OneToMany(() => CategoryEntity, (category) => category.user)
   categories: CategoryEntity[];
+
+  @OneToMany(() => ProductEntity, (product) => product.user)
+  products: ProductEntity[];
 }

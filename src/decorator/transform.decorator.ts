@@ -131,7 +131,7 @@ export class IsExistConstraint implements ValidatorConstraintInterface {
 class IsDuplicateConstraint implements ValidatorConstraintInterface {
   async validate(value: any, args: any): Promise<boolean> {
     const [entityClass, property] = args.constraints;
-    console.log(value, 'value', args);
+
     const response = await connection.manager.findOne(entityClass, {
       where: { [property]: value },
     });
