@@ -21,6 +21,7 @@ const databaseConnection = (): DataSourceOptions => {
     entities: EntityList,
     //autoLoadEntities: true,
     synchronize: true,
+    migrations: ['dist/db/migrations/*.js'],
   } as DataSourceOptions;
 };
 

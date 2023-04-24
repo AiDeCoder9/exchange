@@ -11,7 +11,6 @@ import {
   UseGuards,
   Get,
   Request,
-  Headers,
 } from '@nestjs/common';
 
 import { LoginRequest, SetPasswordRequest } from './authentication.dto';

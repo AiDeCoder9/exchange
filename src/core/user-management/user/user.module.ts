@@ -1,4 +1,5 @@
 import { EmailVerificationModule } from '@/core/email-verification/email-verification.module';
+import { CategoryEntity } from '@/core/masterdata/category/category.entity';
 import { AsyncStorageModule } from '@/resource/module/async-storage.module';
 
 import { Module } from '@nestjs/common';
@@ -12,7 +13,7 @@ import { UserService } from './user.service';
   imports: [
     EmailVerificationModule,
     AsyncStorageModule,
-    TypeOrmModule.forFeature([UserEntity]),
+    TypeOrmModule.forFeature([UserEntity, CategoryEntity]),
   ],
   controllers: [UserController],
   providers: [UserService],

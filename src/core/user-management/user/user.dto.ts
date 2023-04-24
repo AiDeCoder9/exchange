@@ -1,4 +1,6 @@
 import {
+  ArrayMinSize,
+  IsArray,
   IsEmail,
   IsEnum,
   IsInt,
@@ -55,4 +57,10 @@ export class User {
   @ApiProperty()
   @IsEnum(GENDER_TYPE)
   gender: GENDER_TYPE;
+}
+
+export class PreferencesRequest {
+  @IsArray()
+  @ArrayMinSize(5)
+  categories: number[];
 }
