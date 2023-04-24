@@ -1,4 +1,3 @@
-import { UserEntity } from '@/core/user-management/user/user.entity';
 import {
   DataSource,
   EntitySubscriberInterface,

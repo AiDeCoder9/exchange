@@ -1,12 +1,13 @@
 import { IsDuplicate, Trim } from '@/decorator/transform.decorator';
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsEmail,
+  IsBoolean,
+  IsBooleanString,
   IsNotEmpty,
-  IsNumber,
   IsNumberString,
   IsString,
   MaxLength,
+  ValidateIf,
 } from 'class-validator';
 import { ProductEntity } from './product.entity';
 
@@ -30,7 +31,26 @@ export class ProductCreateRequest {
   @IsNumberString()
   @Trim()
   @ApiProperty()
-  price: string;
+  price: number;
+
+  @IsNotEmpty({ message: 'Delivery Option must be determined' })
+  @IsBooleanString()
+  @ApiProperty()
+  delivery: boolean;
+
+  @ValidateIf((product) => product.delivery === 'true')
+  @IsNotEmpty({ message: 'Mention Delivery Charge' })
+  @IsNumberString()
+  @ApiProperty()
+  deliveryCharge: number;
+
+  @ValidateIf((product) => product.delivery === 'true')
+  @IsNotEmpty({ message: 'Mention Delivery Location' })
+  @IsString()
+  @Trim()
+  @MaxLength(255)
+  @ApiProperty()
+  deliveryLocation: string;
 
   @ApiProperty({
     type: 'array',

@@ -1,6 +1,7 @@
+import { ProductEntity } from '@/core/product/product.entity';
 import { UserEntity } from '@/core/user-management/user/user.entity';
 import { CommonEntityPrimary } from '@/resource/entity/primary.entity';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToMany, ManyToOne } from 'typeorm';
 
 @Entity({ name: 'category' })
 export class CategoryEntity extends CommonEntityPrimary {
@@ -10,4 +11,6 @@ export class CategoryEntity extends CommonEntityPrimary {
   description: string;
   @ManyToOne(() => UserEntity, (user) => user.categories)
   user: UserEntity;
+  @ManyToMany(() => ProductEntity, (product) => product.categories)
+  products: ProductEntity[];
 }

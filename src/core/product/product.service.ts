@@ -16,6 +16,13 @@ export class ProductService {
   findAll(): Promise<ProductEntity[]> {
     return this.productRepository.find();
   }
+
+  async markAsSold(id: number) {
+    const product = new ProductEntity();
+    product.available = false;
+    this.productRepository.update(id, product);
+  }
+
   async createProduct(
     productDetail: ProductCreateRequest,
     files: Array<Express.Multer.File>,
@@ -24,7 +31,9 @@ export class ProductService {
 
     const requestData = {
       ...productDetail,
-      files: files.map((file) => file.filename),
+      files: files.map(
+        (file) => `${file.path}/${file.filename}${file.mimetype}`,
+      ),
       user,
     };
     await this.productRepository.save(requestData);

@@ -40,4 +40,9 @@ export class ProductController {
   ) {
     return this.productService.createProduct(body, files);
   }
+
+  @Put('mark-as-sold/:id')
+  async update(@Param('id') id: number) {
+    return this.productService.markAsSold(id);
+  }
 }
