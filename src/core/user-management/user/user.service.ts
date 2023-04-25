@@ -1,24 +1,26 @@
 import { USER_ROLE } from '@/utils/constant';
 import {
   BadRequestException,
+  Inject,
   Injectable,
   UnauthorizedException,
+  forwardRef,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { PreferencesRequest, User } from './user.dto';
 import { UserEntity } from './user.entity';
 import * as bcrypt from 'bcrypt';
 import { EmailVerificationService } from '@/core/email-verification/email-verification.service';
 import { AsyncLocalStorage } from 'async_hooks';
-import { CategoryEntity } from '@/core/masterdata/category/category.entity';
+import { CategoryService } from '@/core/masterdata/category/category.service';
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
-    @InjectRepository(CategoryEntity)
-    private categoryRepository: Repository<CategoryEntity>,
+    @Inject(forwardRef(() => CategoryService))
+    private readonly categoryService: CategoryService,
     private emailVerificationService: EmailVerificationService,
     private readonly asyncLocalStorage: AsyncLocalStorage<any>,
   ) {}
@@ -70,9 +72,9 @@ export class UserService {
     );
   }
   async setUserPreferences(preferences: PreferencesRequest) {
-    const preferenceData = await this.categoryRepository.findBy({
-      id: In(preferences.categories),
-    });
+    const preferenceData = await this.categoryService.findMatchedCategories(
+      preferences.categories,
+    );
     if (preferenceData.length !== preferences.categories.length) {
       throw new Error('One or more preference are invalid');
     }

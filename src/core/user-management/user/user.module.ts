@@ -1,19 +1,21 @@
 import { EmailVerificationModule } from '@/core/email-verification/email-verification.module';
-import { CategoryEntity } from '@/core/masterdata/category/category.entity';
+
 import { AsyncStorageModule } from '@/resource/module/async-storage.module';
 
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { UserController } from './user.controller';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
+import { CategoryModule } from '@/core/masterdata/category/category.module';
 
 @Module({
   imports: [
+    forwardRef(() => CategoryModule),
     EmailVerificationModule,
     AsyncStorageModule,
-    TypeOrmModule.forFeature([UserEntity, CategoryEntity]),
+    TypeOrmModule.forFeature([UserEntity]),
   ],
   controllers: [UserController],
   providers: [UserService],

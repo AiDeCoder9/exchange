@@ -1,7 +1,7 @@
 import { UserService } from '@/core/user-management/user/user.service';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { CategoryEntity } from './category.entity';
 import { Category } from './dto/category.dto';
 
@@ -10,11 +10,17 @@ export class CategoryService {
   constructor(
     @InjectRepository(CategoryEntity)
     private categoryRepository: Repository<CategoryEntity>,
-    private userService: UserService,
+    @Inject(forwardRef(() => UserService))
+    private readonly userService: UserService,
   ) {}
 
   findAll(): Promise<CategoryEntity[]> {
     return this.categoryRepository.find();
+  }
+  async findMatchedCategories(categories: number[]) {
+    return await this.categoryRepository.findBy({
+      id: In(categories),
+    });
   }
 
   findOne(id: number): Promise<CategoryEntity | null> {
