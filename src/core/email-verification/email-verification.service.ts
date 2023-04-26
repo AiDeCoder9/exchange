@@ -26,7 +26,7 @@ export class EmailVerificationService {
       expiresIn: tokenConfig?.expiry,
     });
     const confirmationUrl = `${url}:${port}/email-verification/${token}`;
-    console.log(confirmationUrl, 'confirmation url');
+    console.log(confirmationUrl, password, 'confirmation url');
     sendGrid.setApiKey(process.env.MAIL_API_KEY as string);
     const msg = {
       to: email,
