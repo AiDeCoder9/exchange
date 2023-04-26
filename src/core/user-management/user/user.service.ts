@@ -14,6 +14,7 @@ import * as bcrypt from 'bcrypt';
 import { EmailVerificationService } from '@/core/email-verification/email-verification.service';
 import { AsyncLocalStorage } from 'async_hooks';
 import { CategoryService } from '@/core/masterdata/category/category.service';
+import { CategoryEntity } from '@/core/masterdata/category/category.entity';
 @Injectable()
 export class UserService {
   constructor(
@@ -71,6 +72,7 @@ export class UserService {
       { password, isEmailVerified: true },
     );
   }
+
   async setUserPreferences(preferences: PreferencesRequest) {
     const preferenceData = await this.categoryService.findMatchedCategories(
       preferences.categories,
@@ -78,8 +80,17 @@ export class UserService {
     if (preferenceData.length !== preferences.categories.length) {
       throw new Error('One or more preference are invalid');
     }
+    const user = await this.findActiveUser();
+    user.categories = preferenceData;
+    await this.userRepository.save(user);
+  }
+  async getUserPreferences(): Promise<CategoryEntity[] | null> {
     const { id } = this.asyncLocalStorage.getStore();
-    await this.userRepository.update({ id }, { categories: preferenceData });
-    console.log(preferences);
+    const user = await this.userRepository.findOne({
+      where: { id },
+      relations: ['categories'],
+    });
+    return user?.categories ?? null;
+    //return user?.categories;
   }
 }
