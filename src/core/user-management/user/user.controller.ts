@@ -26,11 +26,6 @@ export class UserController {
   async createAdmin(@Body() user: User) {
     return this.userService.createAdminUser(user);
   }
-
-  @Get(':email')
-  async findOne(@Param('email') email: string): Promise<UserEntity | null> {
-    return this.userService.findOne(email);
-  }
   @Get('/preferences/all')
   async findAll() {
     return this.userService.getUserPreferences();
@@ -40,5 +35,9 @@ export class UserController {
   async setPassword(@Body() preferencesRequest: PreferencesRequest) {
     console.log(preferencesRequest, 'check');
     return this.userService.setUserPreferences(preferencesRequest);
+  }
+  @Get(':email')
+  async findOne(@Param('email') email: string): Promise<UserEntity | null> {
+    return this.userService.findOne(email);
   }
 }
