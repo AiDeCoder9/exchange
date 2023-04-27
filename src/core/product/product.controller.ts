@@ -38,7 +38,13 @@ export class ProductController {
     @Body() body: ProductCreateRequest,
     @UploadedFiles() files: Array<Express.Multer.File>,
   ) {
+    console.log(files, 'files');
     return this.productService.createProduct(body, files);
+  }
+
+  @Get('detail/:id')
+  async findOne(@Param('id') id: number) {
+    return this.productService.productDetail(id);
   }
 
   @Put('mark-as-sold/:id')

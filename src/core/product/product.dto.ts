@@ -1,6 +1,8 @@
 import { IsDuplicate, Trim } from '@/decorator/transform.decorator';
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  ArrayMinSize,
+  IsArray,
   IsBoolean,
   IsBooleanString,
   IsNotEmpty,
@@ -8,6 +10,7 @@ import {
   IsString,
   MaxLength,
   ValidateIf,
+  ValidateNested,
 } from 'class-validator';
 import { ProductEntity } from './product.entity';
 
@@ -60,4 +63,9 @@ export class ProductCreateRequest {
     },
   })
   files: Array<Express.Multer.File>;
+
+  @IsNotEmpty({ message: 'Product Category is required' })
+  @IsArray()
+  @ArrayMinSize(1)
+  categories: number[];
 }

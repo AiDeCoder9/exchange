@@ -7,10 +7,12 @@ import { UserModule } from '../user-management/user/user.module';
 import { ProductController } from './product.controller';
 import { ProductEntity } from './product.entity';
 import { ProductService } from './product.service';
+import { CategoryModule } from '../masterdata/category/category.module';
 
 @Module({
   imports: [
     UserModule,
+    CategoryModule,
     TypeOrmModule.forFeature([ProductEntity]),
     MulterModule.registerAsync({
       imports: [ConfigModule],

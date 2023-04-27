@@ -91,6 +91,5 @@ export class UserService {
       relations: ['categories'],
     });
     return user?.categories ?? null;
-    //return user?.categories;
   }
 }
