@@ -2,7 +2,7 @@ import { CategoryEntity } from '@/core/masterdata/category/category.entity';
 import { ProductEntity } from '@/core/product/product.entity';
 import { CommonEntityPrimary } from '@/resource/entity/primary.entity';
 import { GENDER_TYPE, USER_ROLE } from '@/utils/constant';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 
 @Entity({ name: 'user' })
 export class UserEntity extends CommonEntityPrimary {
@@ -23,7 +23,8 @@ export class UserEntity extends CommonEntityPrimary {
   @Column({ default: false })
   isEmailVerified: boolean;
 
-  @OneToMany(() => CategoryEntity, (category) => category.user)
+  @ManyToMany(() => CategoryEntity)
+  @JoinTable()
   categories: CategoryEntity[];
 
   @OneToMany(() => ProductEntity, (product) => product.user)

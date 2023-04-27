@@ -31,6 +31,10 @@ export class UserController {
   async findOne(@Param('email') email: string): Promise<UserEntity | null> {
     return this.userService.findOne(email);
   }
+  @Get('/preferences/all')
+  async findAll() {
+    return this.userService.getUserPreferences();
+  }
 
   @Post('set-preferences')
   async setPassword(@Body() preferencesRequest: PreferencesRequest) {

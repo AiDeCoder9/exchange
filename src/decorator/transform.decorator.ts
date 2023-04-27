@@ -11,7 +11,7 @@ import {
 import { ClassConstructor } from 'class-transformer';
 import { stringToBase64 } from '@/utils/string-convertor';
 import { Injectable } from '@nestjs/common';
-import { connection } from '@/config/database.config';
+import connection from '@/config/database.config';
 
 interface OptionInterface {
   column: string;

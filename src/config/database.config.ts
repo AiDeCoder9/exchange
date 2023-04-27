@@ -2,7 +2,9 @@ import { ConfigService } from '@nestjs/config';
 import configuration from './configuration';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import EntityList from '@/resource/entity';
+import { dataSourceOptions } from 'data-source';
 const databaseConnection = (): DataSourceOptions => {
+  console.log('connection', __dirname);
   const config = configuration();
   const configService: ConfigService = new ConfigService<
     Record<string, unknown>,
@@ -12,20 +14,13 @@ const databaseConnection = (): DataSourceOptions => {
   const dbConfig = configService.get<DatabaseConfig>('database');
 
   return {
-    type: 'postgres',
-    host: dbConfig?.host,
+    ...dataSourceOptions,
     port: dbConfig?.port,
-    username: dbConfig?.user,
-    password: dbConfig?.password,
-    database: dbConfig?.database,
-    entities: EntityList,
-    //autoLoadEntities: true,
-    synchronize: true,
-    migrations: ['dist/db/migrations/*.js'],
   } as DataSourceOptions;
 };
 
 const connection = new DataSource(databaseConnection());
+
 connection
   .initialize()
   .then(() => {
@@ -34,4 +29,6 @@ connection
   .catch((err) => {
     console.error(`Data Source initialization error`, err);
   });
-export { databaseConnection, connection };
+export { databaseConnection };
+
+export default connection;

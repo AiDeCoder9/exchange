@@ -11,6 +11,7 @@ export class CategoryEntity extends CommonEntityPrimary {
   description: string;
   @ManyToOne(() => UserEntity, (user) => user.categories)
   user: UserEntity;
+
   @ManyToMany(() => ProductEntity, (product) => product.categories)
   products: ProductEntity[];
 }
