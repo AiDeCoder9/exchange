@@ -8,6 +8,8 @@ import { ProductController } from './product.controller';
 import { ProductEntity } from './product.entity';
 import { ProductService } from './product.service';
 import { CategoryModule } from '../masterdata/category/category.module';
+import { diskStorage } from 'multer';
+import * as path from 'path';
 
 @Module({
   imports: [
@@ -17,7 +19,20 @@ import { CategoryModule } from '../masterdata/category/category.module';
     MulterModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
-        dest: configService.get<MulterConfig>('multer')?.destination,
+        storage: diskStorage({
+          destination: path.resolve(
+            __dirname,
+            '..',
+            configService.get<MulterConfig>('multer')?.destination ?? '',
+          ),
+          filename: (_req, file, cb) => {
+            const fileName = path
+              .parse(file.originalname)
+              .name.replace(/\s/g, '');
+            const extension = path.parse(file.originalname).ext;
+            cb(null, `${fileName}${extension}`);
+          },
+        }),
       }),
       inject: [ConfigService],
     }),

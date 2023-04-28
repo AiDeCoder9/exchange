@@ -37,12 +37,10 @@ export class ProductService {
     const requestData = {
       ...productDetail,
       ...product,
-      files: files.map(
-        (file) => `${file.path}/${file.filename}${file.mimetype}`,
-      ),
+      files: files.map((file) => file.filename),
       user,
     };
-    console.log(requestData, 'request');
+
     await this.productRepository.save(requestData);
   }
   async markAsSold(id: number) {

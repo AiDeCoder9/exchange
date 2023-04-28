@@ -4,6 +4,7 @@ import { MasterModule } from '@/core/masterdata/master.module';
 import { ProductModule } from '@/core/product/product.module';
 import { AuthenticationModule } from '@/core/user-management/authentication/authentication.module';
 import { UserModule } from '@/core/user-management/user/user.module';
+import { UtilityModule } from '@/core/utilities/utilities.module';
 export default [
   UserModule,
   AuthenticationModule,
@@ -11,4 +12,5 @@ export default [
   MasterModule,
   EmailVerificationModule,
   ProductModule,
+  UtilityModule,
 ];

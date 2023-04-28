@@ -7,6 +7,7 @@ import { CustomValidationPipe } from './pipe/validation-pipe';
 import { ExceptionFilter } from './exceptions/exception-filter';
 import { join } from 'path';
 async function bootstrap() {
+  console.log(__dirname, 'dir', join(__dirname, 'public'));
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   SwaggerModule.setup(
     'api',
@@ -16,7 +17,6 @@ async function bootstrap() {
   app.useStaticAssets(join(__dirname, 'public'), {
     prefix: '/public/',
   });
-
   app.useGlobalPipes(new CustomValidationPipe());
   app.useGlobalFilters(new ExceptionFilter());
   await app.listen(process.env.PORT || 3400);
