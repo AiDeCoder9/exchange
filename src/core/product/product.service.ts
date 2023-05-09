@@ -1,5 +1,5 @@
 import { UserService } from '@/core/user-management/user/user.service';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProductCreateRequest } from './product.dto';
@@ -17,6 +17,11 @@ export class ProductService {
 
   findAll(): Promise<ProductEntity[]> {
     return this.productRepository.find();
+  }
+  async findById(id: number) {
+    const product = await this.productRepository.findOneBy({ id });
+    if (product) return product;
+    throw new BadRequestException('Product not found');
   }
 
   async createProduct(
@@ -54,5 +59,14 @@ export class ProductService {
       relations: ['categories'],
     });
     return product;
+  }
+  async findProductChats(productId: number) {
+    const product = await this.productRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.chats', 'chat')
+      .where('product.id = :id', { id: productId })
+      .getOne();
+    if (product) return product.chats;
+    throw new BadRequestException('No chat history found');
   }
 }

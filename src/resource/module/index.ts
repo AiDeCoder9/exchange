@@ -1,3 +1,4 @@
+import { ChatModule } from '@/core/chat/chat.module';
 import { EmailVerificationModule } from '@/core/email-verification/email-verification.module';
 import { CategoryModule } from '@/core/masterdata/category/category.module';
 import { MasterModule } from '@/core/masterdata/master.module';
@@ -13,4 +14,5 @@ export default [
   EmailVerificationModule,
   ProductModule,
   UtilityModule,
+  ChatModule,
 ];

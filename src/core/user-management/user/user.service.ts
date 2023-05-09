@@ -29,6 +29,11 @@ export class UserService {
   findOne(email: string): Promise<UserEntity | null> {
     return this.userRepository.findOneBy({ email });
   }
+  async findById(id: number): Promise<UserEntity> {
+    const user = await this.userRepository.findOneBy({ id });
+    if (user) return user;
+    throw new BadRequestException('User not found');
+  }
   async findActiveUser(): Promise<UserEntity> {
     const { id } = this.asyncLocalStorage.getStore();
     const user = await this.userRepository.findOneBy({ id });
